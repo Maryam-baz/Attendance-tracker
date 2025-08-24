@@ -1,4 +1,5 @@
-First,Last,Age,Dropped off,Picked up,Emergency Contact Name,Emergency Contact Phone
-John,Doe,10,Yes,Yes,Jane Doe,123-456-7890
-Mary,Smith,9,No,Yes,Bob Smith,987-654-3210
-Alice,Johnson,11,Yes,No,Carol Johnson,555-555-5555
+First,Last,Age,Dropped off,Picked up,Emergency Name,Emergency Phone
+John,Doe,10,No,No,Jane Doe,123-456-7890
+Mary,Smith,9,No,No,Bob Smith,987-654-3210
+Alice,Johnson,11,No,No,Carol Johnson,555-555-5555
+Bob,Nog,13,No,No,Tetra,553-554-3223

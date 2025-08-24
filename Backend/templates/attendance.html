@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6f2ff; /* Light blue background */
+            margin: 0;
+            padding: 20px 50px;
+        }
+
+        h1 {
+            color: #0059b3; /* Dark blue */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #009933; /* Green header */
+            color: white;
+            font-size: 16px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light grey alternate rows */
+        }
+
+        tbody tr:hover {
+            background-color: #d9f2d9; /* Light green hover */
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 90%;
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        /* Checkbox style for drop off/picked up */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: red;
+            transition: accent-color 0.3s;
+        }
+
+        input[type="checkbox"]:checked {
+            accent-color: #009933; /* Green when checked */
+        }
+
+        .counter {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #0059b3;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background-color: #009933; /* Green */
+            color: white;
+            margin: 10px 5px 0 0;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #006622;
+        }
+
+        button.home-btn {
+            background-color: #0059b3; /* Blue home button */
+        }
+
+        button.home-btn:hover {
+            background-color: #003d80;
+        }
+
+        input[readonly] {
+            background-color: #f5f5f5;
+            border: none;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Attendance Tracker</h1>
+
+    <form method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th>First</th>
+                    <th>Last</th>
+                    <th>Age</th>
+                    <th>Dropped Off</th>
+                    <th>Picked Up</th>
+                    <th>Emergency Name</th>
+                    <th>Emergency Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in rows %}
+                <tr>
+                    <td><input type="text" name="first_{{ loop.index0 }}" value="{{ student['First'] }}" {% if not is_employee %}readonly{% endif %}></td>
+                    <td><input type="text" name="last_{{ loop.index0 }}" value="{{ student['Last'] }}" {% if not is_employee %}readonly{% endif %}></td>
+                    <td><input type="number" name="age_{{ loop.index0 }}" value="{{ student['Age'] }}" {% if not is_employee %}readonly{% endif %}></td>
+                    <td><input type="checkbox" name="dropped_{{ loop.index0 }}" value="Yes" {% if student['Dropped off'] == 'Yes' %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="picked_{{ loop.index0 }}" value="Yes" {% if student['Picked up'] == 'Yes' %}checked{% endif %}></td>
+                    <td><input type="text" name="emergency_name_{{ loop.index0 }}" value="{{ student['Emergency Name'] }}" {% if not is_employee %}readonly{% endif %}></td>
+                    <td><input type="text" name="emergency_phone_{{ loop.index0 }}" value="{{ student['Emergency Phone'] }}" {% if not is_employee %}readonly{% endif %}></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_employee %}
+        <h3>Add New Student</h3>
+        <table>
+            <tr>
+                <td><input type="text" name="new_first" placeholder="First Name"></td>
+                <td><input type="text" name="new_last" placeholder="Last Name"></td>
+                <td><input type="number" name="new_age" placeholder="Age"></td>
+                <td><input type="checkbox" name="new_dropped" value="Yes"></td>
+                <td><input type="checkbox" name="new_picked" value="Yes"></td>
+                <td><input type="text" name="new_emergency_name" placeholder="Emergency Name"></td>
+                <td><input type="text" name="new_emergency_phone" placeholder="Emergency Phone"></td>
+            </tr>
+        </table>
+        {% endif %}
+
+        <button type="submit">Update Attendance</button>
+        <button type="button" class="home-btn" onclick="window.location.href='/'">Home</button>
+        {% if is_employee %}
+        <button type="button" onclick="window.location.href='{{ url_for('logout') }}'">Logout</button>
+        {% endif %}
+    </form>
+
+    <div class="counter">
+        Kids still here: {{ still_here }}
+    </div>
+</body>
+</html>

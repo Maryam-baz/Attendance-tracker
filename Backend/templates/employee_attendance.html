@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Attendance</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        input[type="checkbox"] { transform: scale(1.2); }
+        .counter { margin-top: 20px; font-weight: bold; font-size: 18px; }
+        input[readonly] { background-color: #f5f5f5; border: none; }
+        button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Employee Attendance Tracker</h1>
+    <form method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th>First</th>
+                    <th>Last</th>
+                    <th>Age</th>
+                    <th>Dropped Off</th>
+                    <th>Picked Up</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in rows %}
+                <tr>
+                    <td><input type="text" value="{{ student['First'] }}" readonly></td>
+                    <td><input type="text" value="{{ student['Last'] }}" readonly></td>
+                    <td><input type="number" value="{{ student['Age'] }}" readonly></td>
+                    <td><input type="checkbox" name="dropped_{{ loop.index0 }}" value="Yes" {% if student['Dropped off'] == 'Yes' %}checked{% endif %}></td>
+                    <td><input type="checkbox" name="picked_{{ loop.index0 }}" value="Yes" {% if student['Picked up'] == 'Yes' %}checked{% endif %}></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit">Update Attendance</button>
+    </form>
+
+    <div class="counter">
+        Kids still here: {{ still_here }}
+    </div>
+
+    <a href="{{ url_for('home') }}"><button>Go Back Home</button></a>
+</body>
+</html>

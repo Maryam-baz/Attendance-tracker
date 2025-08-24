@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Tracker - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        img {
+            height: 100px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='images/image3.png') }}" alt="Logo">
+    <h1>Welcome to the Attendance Tracker</h1>
+    <p>Select your access:</p>
+    <a href="{{ url_for('attendance') }}" class="btn">Guest Access</a>
+    <a href="{{ url_for('employee_login') }}" class="btn">Employee Login</a>
+</body>
+</html>
