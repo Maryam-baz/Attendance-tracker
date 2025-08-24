@@ -2,8 +2,9 @@ from flask import Flask, jsonify, render_template
 import csv, os
 
 app = Flask(__name__, template_folder="templates")
-# Logo URL variable
-logo_url = "https://yourdomain.com/path/to/logo.png"  # change to your logo
+
+# Logo
+logo_url = "https://github.com/Maryam-baz/Attendance-tracker/blob/9b32dee99f67b8fd354dd3aec5d3151fa99696dc/image%203.png"
 
 # Home page
 @app.route("/")
