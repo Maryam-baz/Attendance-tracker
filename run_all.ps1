@@ -1,34 +1,20 @@
-# -----------------------------
-# run_all.ps1
-# -----------------------------
-# Paths
-$projectRoot = "C:\Users\marya\Attendance-tracker"
+$projectRoot = "C:\Users\marya\Attendance-Tracker"
+$backendScript = "$projectRoot\Backend\app.py"
 $frontendDir = "$projectRoot\Frontend"
-$backendDir = "$projectRoot\Backend"
-$jsonJar = "$frontendDir\json-20210307.jar"
 $mainJava = "$frontendDir\Main.java"
-$pythonApp = "$backendDir\app.py"
-
-# -----------------------------
-# Download JSON library if missing
-# -----------------------------
-if (-not (Test-Path $jsonJar)) {
-    Write-Host "Downloading org.json library..."
-    Invoke-WebRequest -Uri "https://repo1.maven.org/maven2/org/json/json/20210307/json-20210307.jar" -OutFile $jsonJar
-}
 
 # -----------------------------
 # Start Python backend
 # -----------------------------
 Write-Host "Starting Python backend..."
-$pythonProcess = Start-Process python -ArgumentList $pythonApp -PassThru
+$pyProcess = Start-Process python -ArgumentList $backendScript -PassThru
 
 # -----------------------------
-# Wait until backend is ready
+# Wait until backend responds
 # -----------------------------
+$backendReady = $false
 $maxRetries = 15
 $retry = 0
-$backendReady = $false
 
 while (-not $backendReady -and $retry -lt $maxRetries) {
     try {
@@ -45,32 +31,29 @@ while (-not $backendReady -and $retry -lt $maxRetries) {
 
 if (-not $backendReady) {
     Write-Host "Backend did not start in time." -ForegroundColor Red
-    $pythonProcess.Kill()
+    $pyProcess.Kill()
     exit 1
 }
 
 # -----------------------------
 # Compile Java frontend
 # -----------------------------
-Write-Host "Compiling Frontend/Main.java..."
-javac -cp ".;$jsonJar" $mainJava
+Write-Host "Compiling Java frontend..."
+javac -d "$frontendDir" $mainJava
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Compilation failed!" -ForegroundColor Red
-    $pythonProcess.Kill()
+    $pyProcess.Kill()
     exit 1
 }
 
 # -----------------------------
-# Run Java frontend and wait until it exits
+# Run Java frontend
 # -----------------------------
-Write-Host "Running Frontend.Main..."
-$javaProcess = Start-Process java -ArgumentList "-cp", ".;$jsonJar", "Frontend.Main" -PassThru
-$javaProcess.WaitForExit()
+Write-Host "Running Java frontend..."
+java -cp "$frontendDir" Frontend.Main
 
 # -----------------------------
 # Stop Python backend
 # -----------------------------
-if (-not $pythonProcess.HasExited) {
-    $pythonProcess.Kill()
-}
+$pyProcess.Kill()
 Write-Host "Python backend stopped."
